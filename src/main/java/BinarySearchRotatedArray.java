@@ -1,34 +1,49 @@
 public class BinarySearchRotatedArray {
-    /**
-     * Searches for a target value in a rotated sorted array.
-     *
-     * @param arr            The rotated sorted array to search in
-     * @param target         The value to search for
-     * @param rotationIndex  The index at which the array is rotated
-     * @return               The index of the target value if found, -1 otherwise
-     */
+    
     public int search(int[] arr, int target, int rotationIndex){
-        //TODO
-        /*
-         * You have to check if the rotatedIndex is 0,
-         * that means the array is not rotated at all or
-         * the smallest index is at position 0.(remember the array is sorted)
-         */
+        int n = arr.length;
         
+        // If the rotation index is 0, the array is not rotated → Perform normal binary search
+        if (rotationIndex == 0) {
+            return binarySearch(arr, 0, n - 1, target);
+        }
+
+        // If target is in the left sorted portion (0 to rotationIndex-1)
+        if (target >= arr[0] && target <= arr[rotationIndex - 1]) {
+            return binarySearch(arr, 0, rotationIndex - 1, target);
+        }
+
+        // Otherwise, search in the right sorted portion (rotationIndex to n-1)
+        return binarySearch(arr, rotationIndex, n - 1, target);
     }
 
-    /**
-     * Performs a binary search on a sorted array within the specified range.
-     *
-     * @param arr     The sorted array to search in
-     * @param left    The left boundary of the search range (inclusive)
-     * @param right   The right boundary of the search range (inclusive)
-     * @param target  The value to search for
-     * @return        The index of the target value if found, -1 otherwise
-     */
-    private int binarySearch(int[] arr, int left, int right, int target){
+    private int binarySearch(int[] arr, int left, int right, int target) {
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+
+            if (arr[mid] == target) {
+                return mid; // Target found
+            } 
+            else if (arr[mid] < target) {
+                left = mid + 1; // Search right half
+            } 
+            else {
+                right = mid - 1; // Search left half
+            }
+        }
+        return -1; // Target not found
+    }
+
+    public static void main(String[] args) {
+        BinarySearchRotatedArray searcher = new BinarySearchRotatedArray();
         
-        return -1;
+        int[] arr = {4, 5, 6, 7, 1, 2, 3}; // Rotated at index 4
+        int rotationIndex = 4;
         
+        System.out.println(searcher.search(arr, 6, rotationIndex)); // Output: 2
+        System.out.println(searcher.search(arr, 1, rotationIndex)); // Output: 4
+        System.out.println(searcher.search(arr, 9, rotationIndex)); // Output: -1 (not found)
+
+       
     }
 }
